@@ -1,4 +1,5 @@
-# Group Project Back End
+Hello
+
 
 This repo contains the `.gitignore` and `requirements.txt` you'll need to get started on your back end. A django project hasn't been created yet, so one person from the group will need to:
 
