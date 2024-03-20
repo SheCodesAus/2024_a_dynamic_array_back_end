@@ -7,7 +7,7 @@ from .serializers import CustomUserSerializer
 
 class CustomUserList(APIView):
     def get(self, request):
-        users = CustomUser.all()
+        users = CustomUser.objects.all()
         serializer = CustomUserSerializer(users, many=True)
         return Response(serializer.data)
 
