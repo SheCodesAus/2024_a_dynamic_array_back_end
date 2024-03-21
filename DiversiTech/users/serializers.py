@@ -22,10 +22,14 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
+        self.validate_user_password(user, validated_data['password'])
+        return user
+
+    def validate_user_password(self, user, password):
         try:
-            validate_password(password=validated_data['password'], user=user)
+            validate_password(password=password, user=user)
         except ValidationError as err:
             user.delete()
             raise serializers.ValidationError({'password': err.messages})    
-        return user
+        
     
