@@ -1,8 +1,13 @@
 from django.db import models
+from django.contrib.auth import get_user_model
 
 # Create your models here.
 class Profile(models.Model):
-  owner = models.CharField(max_length=200)
+  owner = models.OneToOneField(
+    get_user_model(),
+    on_delete=models.CASCADE,
+    primary_key=True,
+    related_name='user_profile')
   # first_name = models.CharField(max_length=30,null=False, blank=False)
   # last_name = models.CharField(max_length=30,null=False, blank=False)
   # username = models.CharField(max_length=30,null=False, blank=False)
@@ -24,7 +29,7 @@ class Profile(models.Model):
         ("Facebook", "Facebook"),
         ("Instagram", "Instagram")
     )
-  contact_preference = models.CharField(max_length=30, choices=contact_preference_choices)
+  contact_preference = models.CharField(max_length=30, choices=contact_preference_choices, default="Email")
   is_open_to_mentor = models.BooleanField(null=True, blank=True)
   is_seeking_mentorship = models.BooleanField(null=True, blank=True)
   date_created = models.DateTimeField(null=True, blank=True)

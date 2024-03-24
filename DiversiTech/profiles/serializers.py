@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Profile
 
 class ProfileSerializer(serializers.ModelSerializer): 
+    owner = serializers.ReadOnlyField(source='owner.username')
     class Meta:
         model = Profile
         fields = '__all__'
@@ -10,11 +11,9 @@ class ProfileDetailSerializer (ProfileSerializer):
     # pledges = PledgeSerializer(many=True, read_only=True)
     # total_number_of_pledges = serializers.ReadOnlyField()
     # sum_of_pledges = serializers.ReadOnlyField()
+     slug_field = "username"
      def update(self, instance, validated_data):
         
-        instance.first_name = validated_data.get('first_name', instance.first_name)
-        instance.last_name = validated_data.get('last_name', instance.last_name)
-        instance.username = validated_data.get('username', instance.username)
         instance.bio = validated_data.get('bio', instance.bio)
         instance.location = validated_data.get('location', instance.location)
         instance.picture_url = validated_data.get('picture_url', instance.picture_url)
