@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import CustomUser
-from .serializers import CustomUserSerializer
+from .serializers import CustomUserSerializer, CustomUserEditSerializer
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 
@@ -72,7 +72,7 @@ class CustomUserDetail(APIView):
                 {"message": "You are not authorized to edit this record"},
                 status=status.HTTP_403_FORBIDDEN
             )
-        serializer = CustomUserSerializer(user, data=request.data, partial=True)
+        serializer = CustomUserEditSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
