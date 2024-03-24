@@ -77,3 +77,14 @@ class CustomUserDetail(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        user = self.get_object(pk)
+
+        if user != request.user and not request.user.is_staff:
+            return Response(
+                {"message": "You are not authorized to delete this record"},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        user.delete()
+        return Response({"message: User successfully deleted"}, status=status.HTTP_200_OK)
