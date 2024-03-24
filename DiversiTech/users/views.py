@@ -63,3 +63,17 @@ class CustomUserDetail(APIView):
 
         serializer = CustomUserSerializer(user)
         return Response(serializer.data)
+    
+    def put(self, request, pk):
+        user = self.get_object(pk)
+
+        if user != request.user and not request.user.is_staff:
+            return Response(
+                {"message": "You are not authorized to edit this record"},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        serializer = CustomUserSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
