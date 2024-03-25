@@ -27,7 +27,7 @@ class ProfileDetail(APIView):
     permission_classes = [
         IsOwnerOrReadOnly
      ]
-    slug_field = "username"
+    
 
 # getting the object from the database
     def get_object(self, pk):

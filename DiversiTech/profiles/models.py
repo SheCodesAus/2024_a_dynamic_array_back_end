@@ -3,14 +3,11 @@ from django.contrib.auth import get_user_model
 
 # Create your models here.
 class Profile(models.Model):
-  owner = models.OneToOneField(
-    get_user_model(),
-    on_delete=models.CASCADE,
-    primary_key=True,
-    related_name='user_profile')
-  # first_name = models.CharField(max_length=30,null=False, blank=False)
-  # last_name = models.CharField(max_length=30,null=False, blank=False)
-  # username = models.CharField(max_length=30,null=False, blank=False)
+  class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['owner'], name="profiles_profile_unique")
+        ]
+
   bio = models.CharField(max_length=1800, null=False, blank=False)
   location = models.CharField(max_length=50,null=True, blank=True)
   picture_url = models.URLField(null=True, blank=True)
@@ -34,4 +31,7 @@ class Profile(models.Model):
   is_seeking_mentorship = models.BooleanField(null=True, blank=True)
   date_created = models.DateTimeField(null=True, blank=True)
 
-  
+  owner = models.ForeignKey(
+    get_user_model(),
+    on_delete=models.CASCADE,
+    related_name='user_profile')
