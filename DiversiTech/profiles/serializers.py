@@ -1,6 +1,12 @@
 from rest_framework import serializers
-from .models import Profile, Industry
+from .models import Profile, Industry, Tag
 from .validators import validate_industries
+
+class TagSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Tag
+        fields = '__all__'
 
 
 class IndustrySerializer(serializers.ModelSerializer):
@@ -12,11 +18,16 @@ class IndustrySerializer(serializers.ModelSerializer):
 
 class ProfileSerializer(serializers.ModelSerializer): 
     owner = serializers.ReadOnlyField(source='owner.id')
-    
+    tags = serializers.SlugRelatedField(
+        many=True,
+        queryset=Tag.objects.all(),
+        slug_field='tag_title'
+    )
+
     industries = serializers.SlugRelatedField(
         many=True,
         queryset=Industry.objects.all(),
-        slug_field='title',
+        slug_field='industry_title',
         validators=[validate_industries]
     )
 
