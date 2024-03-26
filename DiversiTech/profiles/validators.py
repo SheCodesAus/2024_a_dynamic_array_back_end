@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+from .models import Tag
 
 def validate_industries(self):
     """
@@ -8,4 +9,10 @@ def validate_industries(self):
 
     if industry_count > 3:
         raise ValidationError("You may only select a maximum of three industries.")
+
+def validate_unique_tag(value):
+    cleaned_value = value.replace(" ", "").lower()
+    existing_tags = Tag.objects.filter(title__icontains=cleaned_value)
     
+    if existing_tags.exists():
+        raise ValidationError("A similar tag title already exists")

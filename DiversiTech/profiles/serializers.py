@@ -1,8 +1,10 @@
 from rest_framework import serializers
 from .models import Profile, Industry, Tag
-from .validators import validate_industries
+from .validators import validate_industries, validate_unique_tag
 
 class TagSerializer(serializers.ModelSerializer):
+
+    title = serializers.CharField(validators=[validate_unique_tag])
 
     class Meta:
         model = Tag
