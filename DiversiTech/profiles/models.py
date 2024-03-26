@@ -3,6 +3,16 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 
 
+class Tag(models.Model):
+  title = models.CharField(max_length=50, unique=True)
+
+  class Meta:
+      ordering = ["title"]
+  
+  def __str__(self):
+      return self.title
+  
+
 class Industry(models.Model):
   title = models.CharField(max_length=50, unique=True)
 
@@ -48,4 +58,6 @@ class Profile(models.Model):
     related_name='user_profile')
   
   industries = models.ManyToManyField(Industry, related_name='industry_profiles', blank=True)
+  tags = models.ManyToManyField(Tag, related_name='tagged_profiles', blank=True)
+
 

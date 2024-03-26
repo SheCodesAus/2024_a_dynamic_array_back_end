@@ -1,11 +1,49 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Profile, Industry
-from .serializers import ProfileSerializer, ProfileDetailSerializer, IndustrySerializer
+from .models import Profile, Industry, Tag
+from .serializers import ProfileSerializer, ProfileDetailSerializer, IndustrySerializer, TagSerializer
 from django.http import Http404
 from rest_framework import status, permissions
 from .permissions import IsOwnerOrReadOnly
 
+
+class TagList(APIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def get_object(self, pk):
+        try:
+            tag = Tag.objects.get(pk=pk)
+            return tag
+        except Tag.DoesNotExist:
+            raise Http404
+    
+    def get(self, request):
+        tags = Tag.objects.all().order_by('title')
+        serializer = TagSerializer(tags, many=True)
+        return Response(serializer.data)
+    
+    def post(self, request):
+        serializer = TagSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                serializer.data,
+                status=status.HTTP_201_CREATED
+            )
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    def delete(self, request, pk):
+        if not request.user.is_staff:
+            return Response(
+                {"message": "You do not have permission to perform this action"}, status=status.HTTP_403_FORBIDDEN
+            )
+        tag = self.get_object(pk)
+        tag.delete()
+        return Response({"message": "Tag successfully deleted"},
+                        status=status.HTTP_200_OK)
 
 class IndustryList(APIView):
 
