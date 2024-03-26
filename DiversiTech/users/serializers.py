@@ -33,3 +33,14 @@ class CustomUserSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({'password': err.messages})    
         
     
+class CustomUserEditSerializer(serializers.ModelSerializer):
+    """
+    Serializer uses a custom validator to ensure case-insensitive uniqueness of usernames.
+    Django in-built password validation implemented
+
+    """
+    class Meta:
+        model = User
+        fields = '__all__'
+        extra_kwargs = {'password': {'write_only': True}, 'id': {'read_only': True}}
+
