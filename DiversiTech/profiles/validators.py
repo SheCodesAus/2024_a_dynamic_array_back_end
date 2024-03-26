@@ -1,5 +1,5 @@
 from django.core.exceptions import ValidationError
-from .models import Tag
+from .models import Tag, Industry
 
 def validate_industries(self):
     """
@@ -16,3 +16,10 @@ def validate_unique_tag(value):
     
     if existing_tags.exists():
         raise ValidationError("A similar tag title already exists")
+    
+def validate_unique_industry(value):
+    cleaned_value = value.replace(" ", "").lower()
+    existing_industries = Industry.objects.filter(title__icontains=cleaned_value)
+    
+    if existing_industries.exists():
+        raise ValidationError("A similar industry title already exists")

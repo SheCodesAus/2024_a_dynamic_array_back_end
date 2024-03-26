@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Profile, Industry, Tag
-from .validators import validate_industries, validate_unique_tag
+from .validators import validate_industries, validate_unique_tag, validate_unique_industry
 
 class TagSerializer(serializers.ModelSerializer):
 
@@ -12,6 +12,8 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class IndustrySerializer(serializers.ModelSerializer):
+
+    title = serializers.CharField(validators=[validate_unique_industry])
 
     class Meta:
         model = Industry
@@ -44,11 +46,16 @@ class ProfileDetailSerializer (ProfileSerializer):
     def update(self, instance, validated_data):
         
         # clear existing industries
-        instance.industries.clear()
-        
+        instance.industries.clear()    
         # add new industries
         for industry in validated_data['industries']:
             instance.industries.add(industry)
+        
+        # clear existing industries
+        instance.tags.clear()    
+        # add new industries
+        for tag in validated_data['tags']:
+            instance.tags.add(tag)
         
         instance.bio = validated_data.get('bio', instance.bio)
         instance.location = validated_data.get('location', instance.location)
