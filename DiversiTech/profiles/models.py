@@ -47,5 +47,5 @@ class Profile(models.Model):
     on_delete=models.CASCADE,
     related_name='user_profile')
   
-  industries = models.ManyToManyField(Industry, related_name='profiles', blank=True)
+  industries = models.ManyToManyField(Industry, related_name='industry_profiles', blank=True)
 

@@ -16,7 +16,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     industries = serializers.SlugRelatedField(
         many=True,
         queryset=Industry.objects.all(),
-        slug_field='title',
+        slug_field='industry_title',
         validators=[validate_industries]
     )
 
