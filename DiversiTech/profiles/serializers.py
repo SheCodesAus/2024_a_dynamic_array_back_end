@@ -1,18 +1,41 @@
 from rest_framework import serializers
-from .models import Profile
+from .models import Profile, Industry
+from .validators import validate_industries
+
+
+class IndustrySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Industry
+        fields = '__all__'
+
 
 class ProfileSerializer(serializers.ModelSerializer): 
     owner = serializers.ReadOnlyField(source='owner.id')
+    
+    industries = serializers.SlugRelatedField(
+        many=True,
+        queryset=Industry.objects.all(),
+        slug_field='title',
+        validators=[validate_industries]
+    )
+
     class Meta:
         model = Profile
         fields = '__all__'
 
+
 class ProfileDetailSerializer (ProfileSerializer):
-    # pledges = PledgeSerializer(many=True, read_only=True)
-    # total_number_of_pledges = serializers.ReadOnlyField()
-    # sum_of_pledges = serializers.ReadOnlyField()
-     
-     def update(self, instance, validated_data):
+
+
+    def update(self, instance, validated_data):
+        
+        # clear existing industries
+        instance.industries.clear()
+        
+        # add new industries
+        for industry in validated_data['industries']:
+            instance.industries.add(industry)
         
         instance.bio = validated_data.get('bio', instance.bio)
         instance.location = validated_data.get('location', instance.location)

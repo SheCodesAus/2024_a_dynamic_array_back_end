@@ -1,7 +1,18 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 
-# Create your models here.
+
+class Industry(models.Model):
+  title = models.CharField(max_length=50, unique=True)
+
+  class Meta:
+      ordering = ["title"]
+  
+  def __str__(self):
+      return self.title
+
+
 class Profile(models.Model):
   class Meta:
         constraints = [
@@ -35,3 +46,6 @@ class Profile(models.Model):
     get_user_model(),
     on_delete=models.CASCADE,
     related_name='user_profile')
+  
+  industries = models.ManyToManyField(Industry, related_name='profiles', blank=True)
+
