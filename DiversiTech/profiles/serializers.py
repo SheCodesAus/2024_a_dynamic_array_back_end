@@ -1,18 +1,61 @@
 from rest_framework import serializers
-from .models import Profile
+from .models import Profile, Industry, Tag
+from .validators import validate_industries, validate_unique_tag, validate_unique_industry
+
+class TagSerializer(serializers.ModelSerializer):
+
+    tag_name = serializers.CharField(validators=[validate_unique_tag])
+
+    class Meta:
+        model = Tag
+        fields = '__all__'
+
+
+class IndustrySerializer(serializers.ModelSerializer):
+
+    industry_name = serializers.CharField(validators=[validate_unique_industry])
+
+    class Meta:
+        model = Industry
+        fields = '__all__'
+
 
 class ProfileSerializer(serializers.ModelSerializer): 
     owner = serializers.ReadOnlyField(source='owner.id')
+    tags = serializers.SlugRelatedField(
+        many=True,
+        queryset=Tag.objects.all(),
+        slug_field='tag_name'
+    )
+
+    industries = serializers.SlugRelatedField(
+        many=True,
+        queryset=Industry.objects.all(),
+        slug_field='industry_name',
+        validators=[validate_industries]
+    )
+
     class Meta:
         model = Profile
         fields = '__all__'
 
+
 class ProfileDetailSerializer (ProfileSerializer):
-    # pledges = PledgeSerializer(many=True, read_only=True)
-    # total_number_of_pledges = serializers.ReadOnlyField()
-    # sum_of_pledges = serializers.ReadOnlyField()
-     
-     def update(self, instance, validated_data):
+
+
+    def update(self, instance, validated_data):
+        
+        # clear existing industries
+        instance.industries.clear()    
+        # add new industries
+        for industry in validated_data['industries']:
+            instance.industries.add(industry)
+        
+        # clear existing industries
+        instance.tags.clear()    
+        # add new industries
+        for tag in validated_data['tags']:
+            instance.tags.add(tag)
         
         instance.bio = validated_data.get('bio', instance.bio)
         instance.location = validated_data.get('location', instance.location)
