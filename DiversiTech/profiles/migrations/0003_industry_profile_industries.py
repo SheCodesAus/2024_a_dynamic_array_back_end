@@ -14,10 +14,10 @@ class Migration(migrations.Migration):
             name='Industry',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=50, unique=True)),
+                ('industry_name', models.CharField(max_length=50, unique=True)),
             ],
             options={
-                'ordering': ['title'],
+                'ordering': ['industry_name'],
             },
         ),
         migrations.AddField(

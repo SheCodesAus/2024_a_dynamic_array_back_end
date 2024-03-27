@@ -4,23 +4,23 @@ from django.core.exceptions import ValidationError
 
 
 class Tag(models.Model):
-  title = models.CharField(max_length=50, unique=True)
+  tag_name = models.CharField(max_length=50, unique=True)
 
   class Meta:
-      ordering = ["title"]
+      ordering = ["tag_name"]
   
   def __str__(self):
-      return self.title
+      return self.tag_name
   
 
 class Industry(models.Model):
-  title = models.CharField(max_length=50, unique=True)
+  industry_name = models.CharField(max_length=50, unique=True)
 
   class Meta:
-      ordering = ["title"]
+      ordering = ["industry_name"]
   
   def __str__(self):
-      return self.title
+      return self.industry_name
 
 
 class Profile(models.Model):
@@ -28,6 +28,9 @@ class Profile(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['owner'], name="profiles_profile_unique")
         ]
+
+  def __str__(self):
+      return self.owner.get_username()
 
   bio = models.CharField(max_length=1800, null=False, blank=False)
   location = models.CharField(max_length=50,null=True, blank=True)

@@ -12,14 +12,14 @@ def validate_industries(self):
 
 def validate_unique_tag(value):
     cleaned_value = value.replace(" ", "").lower()
-    existing_tags = Tag.objects.filter(title__icontains=cleaned_value)
+    existing_tags = Tag.objects.filter(tag_name__icontains=cleaned_value)
     
     if existing_tags.exists():
-        raise ValidationError("A similar tag title already exists")
+        raise ValidationError("A similar tag name already exists")
     
 def validate_unique_industry(value):
     cleaned_value = value.replace(" ", "").lower()
-    existing_industries = Industry.objects.filter(title__icontains=cleaned_value)
+    existing_industries = Industry.objects.filter(industry_name__icontains=cleaned_value)
     
     if existing_industries.exists():
-        raise ValidationError("A similar industry title already exists")
+        raise ValidationError("A similar industry name already exists")

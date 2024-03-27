@@ -4,7 +4,7 @@ from .models import Profile, Industry, Tag
 from .serializers import ProfileSerializer, ProfileDetailSerializer, IndustrySerializer, TagSerializer
 from django.http import Http404
 from rest_framework import status, permissions
-from .permissions import IsOwnerOrReadOnly
+from .permissions import IsOwnerOrAdminOrReadOnly
 
 
 class TagList(APIView):
@@ -18,11 +18,15 @@ class TagList(APIView):
             raise Http404
     
     def get(self, request):
-        tags = Tag.objects.all().order_by('title')
+        tags = Tag.objects.all().order_by('tag_name')
         serializer = TagSerializer(tags, many=True)
         return Response(serializer.data)
     
     def post(self, request):
+        if not request.user.is_staff:
+            return Response(
+                {"message": "You do not have permission to perform this action"}, status=status.HTTP_403_FORBIDDEN
+            )
         serializer = TagSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -55,7 +59,7 @@ class IndustryList(APIView):
             raise Http404
     
     def get(self, request):
-        industries = Industry.objects.all().order_by('title')
+        industries = Industry.objects.all().order_by('industry_name')
         serializer = IndustrySerializer(industries, many=True)
         return Response(serializer.data)
     
@@ -106,7 +110,7 @@ class ProfileList(APIView):
 
 class ProfileDetail(APIView): 
     permission_classes = [
-        IsOwnerOrReadOnly
+        IsOwnerOrAdminOrReadOnly
      ]
     
 # getting the object from the database
@@ -143,5 +147,5 @@ class ProfileDetail(APIView):
     def delete(self,request, pk):
         profile = self.get_object(pk)
         profile.delete()
-        return Response({"message":"Profile deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+        return Response({"message":"Profile deleted successfully"}, status=status.HTTP_200_OK)
           

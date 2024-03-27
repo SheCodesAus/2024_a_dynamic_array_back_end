@@ -14,10 +14,10 @@ class Migration(migrations.Migration):
             name='Tag',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=50, unique=True)),
+                ('tag_name', models.CharField(max_length=50, unique=True)),
             ],
             options={
-                'ordering': ['title'],
+                'ordering': ['tag_name'],
             },
         ),
     ]

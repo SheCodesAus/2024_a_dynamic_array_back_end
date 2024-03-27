@@ -4,7 +4,7 @@ from .validators import validate_industries, validate_unique_tag, validate_uniqu
 
 class TagSerializer(serializers.ModelSerializer):
 
-    title = serializers.CharField(validators=[validate_unique_tag])
+    tag_name = serializers.CharField(validators=[validate_unique_tag])
 
     class Meta:
         model = Tag
@@ -13,7 +13,7 @@ class TagSerializer(serializers.ModelSerializer):
 
 class IndustrySerializer(serializers.ModelSerializer):
 
-    title = serializers.CharField(validators=[validate_unique_industry])
+    industry_name = serializers.CharField(validators=[validate_unique_industry])
 
     class Meta:
         model = Industry
@@ -25,13 +25,13 @@ class ProfileSerializer(serializers.ModelSerializer):
     tags = serializers.SlugRelatedField(
         many=True,
         queryset=Tag.objects.all(),
-        slug_field='tag_title'
+        slug_field='tag_name'
     )
 
     industries = serializers.SlugRelatedField(
         many=True,
         queryset=Industry.objects.all(),
-        slug_field='industry_title',
+        slug_field='industry_name',
         validators=[validate_industries]
     )
 
