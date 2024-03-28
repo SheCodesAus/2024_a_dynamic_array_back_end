@@ -1,7 +1,7 @@
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.generics import UpdateAPIView
-from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth import update_session_auth_hash
 from rest_framework.response import Response
 from rest_framework import status
 from .models import CustomUser
@@ -19,6 +19,7 @@ class APIChangePasswordView(UpdateAPIView):
         if hasattr(user, 'auth_token'):
             user.auth_token.delete()
         token, created = Token.objects.get_or_create(user=user)
+        update_session_auth_hash(request, user=user)
         #return a new token
         return Response({'token': token.key}, status=status.HTTP_200_OK)
 
