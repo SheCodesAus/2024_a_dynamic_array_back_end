@@ -1,11 +1,27 @@
 from django.http import Http404
 from rest_framework.views import APIView
+from rest_framework.generics import UpdateAPIView
+from django.contrib.auth import update_session_auth_hash
 from rest_framework.response import Response
 from rest_framework import status
 from .models import CustomUser
-from .serializers import CustomUserSerializer, CustomUserEditSerializer
+from .serializers import CustomUserSerializer, CustomUserEditSerializer, UserPasswordChangeSerializer
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
+
+class APIChangePasswordView(UpdateAPIView):
+    
+    def update(self, request, *args, **kwargs):
+        serializer = UserPasswordChangeSerializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        # as drf authtoken is being used, create a new token upon password update
+        if hasattr(user, 'auth_token'):
+            user.auth_token.delete()
+        token, created = Token.objects.get_or_create(user=user)
+        update_session_auth_hash(request, user=user)
+        #return a new token
+        return Response({'token': token.key}, status=status.HTTP_200_OK)
 
 
 class CustomAuthToken(ObtainAuthToken):
