@@ -15,10 +15,11 @@ class APIChangePasswordView(UpdateAPIView):
         serializer = UserPasswordChangeSerializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
-
+        # as drf authtoken is being used, create a new token upon password update
         if hasattr(user, 'auth_token'):
             user.auth_token.delete()
         token, created = Token.objects.get_or_create(user=user)
+        #return a new token
         return Response({'token': token.key}, status=status.HTTP_200_OK)
 
 
