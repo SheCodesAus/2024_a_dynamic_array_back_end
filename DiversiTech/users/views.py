@@ -8,7 +8,6 @@ from .models import CustomUser
 from .serializers import CustomUserSerializer, CustomUserEditSerializer, UserPasswordChangeSerializer
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
-from rest_framework.permissions import IsAuthenticated
 
 class APIChangePasswordView(UpdateAPIView):
     serializer_class = UserPasswordChangeSerializer
@@ -52,14 +51,13 @@ class CustomAuthToken(ObtainAuthToken):
 
 
 class CustomUserList(APIView):
-    permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        # if not request.user.is_staff:
-        #     return Response(
-        #         {"message": "You do not have permission to view these records"},
-        #         status=status.HTTP_403_FORBIDDEN
-        #     )
+        if not request.user.is_staff:
+            return Response(
+                {"message": "You do not have permission to view these records"},
+                status=status.HTTP_403_FORBIDDEN
+            )
         users = CustomUser.objects.all()
         serializer = CustomUserSerializer(users, many=True)
         return Response(serializer.data)
