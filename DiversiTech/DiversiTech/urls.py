@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from users.views import CustomAuthToken
+from users.views import CustomAuthToken, APIChangePasswordView
 # from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
@@ -24,5 +24,6 @@ urlpatterns = [
     path('', include('users.urls')),
     path('api-auth/', include('rest_framework.urls')),
     path('api-token-auth/', CustomAuthToken.as_view(), name='api_token_auth'),
+    path('update-password/', APIChangePasswordView.as_view(), name='update_password'),
     path('', include('profiles.urls')),
 ]
