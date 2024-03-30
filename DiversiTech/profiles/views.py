@@ -92,21 +92,40 @@ class IndustryList(APIView):
 
 
 class ProfileList(APIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get(self, request):
         profiles = Profile.objects.all()
         serializer = ProfileSerializer(profiles, many=True)
         return Response(serializer.data)
     
+    # this method gets all Profiles from the DB and then filters by the user who submits a request
+    # if there is a profile with the owner id = request.user.id the method returns True and otherwise False
+    def profile_exists(self, owner):
+        profiles = Profile.objects.all()
+        profile= profiles.filter(owner=owner)
+        if profile:
+            return True
+        else:
+            return False
+
     def post(self, request):
-     serializer = ProfileSerializer(data=request.data)
-     if serializer.is_valid():
-        serializer.save(owner=request.user)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-     return Response(
-        serializer.errors, 
-        status=status.HTTP_400_BAD_REQUEST
-        )
+    #   checking if the user already have a profile
+      if not self.profile_exists(owner=request.user.id):
+        # if not - execute the normal post request
+        serializer = ProfileSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(owner=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(
+            serializer.errors, 
+            status=status.HTTP_400_BAD_REQUEST
+            )
+      else:
+        # else throw an error
+        return Response(
+                 {"message": "You already have a profile."}, status=status.HTTP_403_FORBIDDEN)
+          
 
 class ProfileDetail(APIView): 
     permission_classes = [
