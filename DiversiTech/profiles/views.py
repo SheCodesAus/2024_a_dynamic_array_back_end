@@ -25,7 +25,7 @@ class TagList(APIView):
     def post(self, request):
         if not request.user.is_staff:
             return Response(
-                {"message": "You do not have permission to perform this action"}, status=status.HTTP_403_FORBIDDEN
+                {"detail": "You do not have permission to perform this action"}, status=status.HTTP_403_FORBIDDEN
             )
         serializer = TagSerializer(data=request.data)
         if serializer.is_valid():
@@ -42,11 +42,11 @@ class TagList(APIView):
     def delete(self, request, pk):
         if not request.user.is_staff:
             return Response(
-                {"message": "You do not have permission to perform this action"}, status=status.HTTP_403_FORBIDDEN
+                {"detail": "You do not have permission to perform this action"}, status=status.HTTP_403_FORBIDDEN
             )
         tag = self.get_object(pk)
         tag.delete()
-        return Response({"message": "Tag successfully deleted"},
+        return Response({"detail": "Tag successfully deleted"},
                         status=status.HTTP_200_OK)
 
 class IndustryList(APIView):
@@ -66,7 +66,7 @@ class IndustryList(APIView):
     def post(self, request):
         if not request.user.is_staff:
             return Response(
-                {"message": "You do not have permission to perform this action"}, status=status.HTTP_403_FORBIDDEN
+                {"detail": "You do not have permission to perform this action"}, status=status.HTTP_403_FORBIDDEN
             )
         serializer = IndustrySerializer(data=request.data)
         if serializer.is_valid():
@@ -83,7 +83,7 @@ class IndustryList(APIView):
     def delete(self, request, pk):
         if not request.user.is_staff:
             return Response(
-                {"message": "You do not have permission to perform this action"}, status=status.HTTP_403_FORBIDDEN
+                {"detail": "You do not have permission to perform this action"}, status=status.HTTP_403_FORBIDDEN
             )
         industry = self.get_object(pk)
         industry.delete()
@@ -124,7 +124,7 @@ class ProfileList(APIView):
       else:
         # else throw an error
         return Response(
-                 {"message": "You already have a profile."}, status=status.HTTP_403_FORBIDDEN)
+                 {"detail": "You already have a profile."}, status=status.HTTP_403_FORBIDDEN)
           
 
 class ProfileDetail(APIView): 
@@ -166,5 +166,5 @@ class ProfileDetail(APIView):
     def delete(self,request, pk):
         profile = self.get_object(pk)
         profile.delete()
-        return Response({"message":"Profile deleted successfully"}, status=status.HTTP_200_OK)
+        return Response({"detail":"Profile deleted successfully"}, status=status.HTTP_200_OK)
           
