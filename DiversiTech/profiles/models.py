@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+# from django.contrib.postgres.fields import DateRangeField
 
 
 class Tag(models.Model):
@@ -64,3 +65,21 @@ class Profile(models.Model):
   tags = models.ManyToManyField(Tag, related_name='tagged_profiles', blank=True)
 
 
+class Experience(models.Model):
+   
+    experience_type_choices = (
+        ("Volunteering", "Volunteering"),
+        ("Project", "Project"),
+        ("Talk", "Talk"),
+        ("Mentoring", "Mentoring"),
+        ("Job", "Job")
+    )
+
+    experience_type = models.CharField( choices=experience_type_choices, default="Job") 
+    description = models.CharField(max_length=1000, null=False, blank=False)
+    url = models.URLField(null=True, blank=True)
+    picture_url = models.URLField(null=True, blank=True)
+    is_present_experience = models.BooleanField(null=False, blank=False, default=False)
+    start_date = models.DateField(blank=False, null=False)
+    end_date = models.DateField(blank=True, null=True)
+    
