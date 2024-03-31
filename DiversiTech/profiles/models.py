@@ -63,11 +63,4 @@ class Profile(models.Model):
   industries = models.ManyToManyField(Industry, related_name='industry_profiles', blank=True)
   tags = models.ManyToManyField(Tag, related_name='tagged_profiles', blank=True)
 
-
-
-  class Experience(models.Model):
-    bio = models.CharField(max_length=1800, null=False, blank=False)
-    location = models.CharField(max_length=50,null=True, blank=True)
-    picture_url = models.URLField(null=True, blank=True)
-
  
