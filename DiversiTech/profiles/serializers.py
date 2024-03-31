@@ -40,6 +40,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ExperienceSerializer(serializers.ModelSerializer):
+    profile = serializers.ReadOnlyField(source='profile.id')
     class Meta:
         model = Experience
         fields = '__all__'
@@ -83,10 +84,12 @@ class ProfileDetailSerializer (ProfileSerializer):
 class ExperienceDetailSerializer(ExperienceSerializer):
 
     def update(self, instance, validated_data):
-        instance.supporter = validated_data.get('supporter', instance.supporter)
-        instance.amount = validated_data.get('amount', instance.amount)
-        instance.comment = validated_data.get('comment', instance.comment)
-        instance.anonymous = validated_data.get('anonymous',instance.anonymous)
-        instance.project = validated_data.get('project', instance.project)
+        instance.experience_type = validated_data.get('experience_type', instance.experience_type)
+        instance.description = validated_data.get('description', instance.description)
+        instance.url = validated_data.get('url', instance.url)
+        instance.picture_url = validated_data.get('picture_url',instance.picture_url)
+        instance.is_present_experience = validated_data.get('is_present_experience', instance.is_present_experience)
+        instance.start_date = validated_data.get('start_date', instance.start_date)
+        instance.end_date = validated_data.get('end_date', instance.end_date)
         instance.save()
         return instance        

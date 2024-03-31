@@ -5,7 +5,7 @@ from .serializers import (ProfileSerializer, ProfileDetailSerializer,
      IndustrySerializer, TagSerializer, ExperienceSerializer, ExperienceDetailSerializer)
 from django.http import Http404
 from rest_framework import status, permissions
-from .permissions import IsOwnerOrAdminOrReadOnly
+from .permissions import IsOwnerOrAdminOrReadOnly, IsProfileOwnerOrAdminOrReadOnly
 
 
 class TagList(APIView):
@@ -172,7 +172,7 @@ class ProfileDetail(APIView):
 
 
 class ExperienceList(APIView):
-    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
         
     def get(self, request, profile_id=None):
         if profile_id:
@@ -186,9 +186,14 @@ class ExperienceList(APIView):
 
     def post (self,request, profile_id):
         serializer = ExperienceSerializer(data=request.data)
-            
+    # Retrieve the Profile instance
+        profile_instance = Profile.objects.get(id=profile_id)
+
+        print(profile_instance.id)
         if serializer.is_valid():
-            serializer.save(profile=profile_id)
+           
+           
+            serializer.save(profile=profile_instance)
             return Response(
                 serializer.data, status=status.HTTP_201_CREATED
             )
@@ -198,11 +203,10 @@ class ExperienceList(APIView):
         )
     
 class ExperienceDetail(APIView): 
-# will need to add the endpoint in URLs.py
-    # permission_classes = [
-    #     permissions.IsAuthenticatedOrReadOnly,
-    #     IsSupporterOrReadOnly
-    # ]
+
+    permission_classes = [
+        IsProfileOwnerOrAdminOrReadOnly
+    ]
 
 # getting the object from the database
     def get_object(self, pk):
@@ -234,3 +238,9 @@ class ExperienceDetail(APIView):
              serializer.errors,
              status=status.HTTP_400_BAD_REQUEST
         )    
+
+
+    def delete(self,request, pk):
+        experience = self.get_object(pk)
+        experience.delete()
+        return Response({"detail": "Experience deleted successfully"}, status=status.HTTP_204_NO_CONTENT)

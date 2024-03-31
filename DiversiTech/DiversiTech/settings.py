@@ -28,7 +28,7 @@ SECRET_KEY = os.environ.get(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get(
     'DJANGO_DEBUG',
-    'False'
+    'True'
 ) != 'False'
 # gotta remember this!
 
@@ -59,7 +59,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication'
     ],
-       'DATE_INPUT_FORMATS':["%d-%m-%Y", "%M-%Y"]
+       'DATE_INPUT_FORMATS':["%d-%m-%Y", "%M/%Y"]
 }
 
 AUTH_USER_MODEL = 'users.CustomUser'
