@@ -76,14 +76,14 @@ class CustomUserList(APIView):
       
     
 class CustomUserDetail(APIView):
-    def get_object(self, username):
+    def get_object(self, pk):
         try:
-            return CustomUser.objects.get(username=username)
+            return CustomUser.objects.get(pk=pk)
         except CustomUser.DoesNotExist:
             raise Http404
     
-    def get(self, request, username):
-        user = self.get_object(username)
+    def get(self, request, pk):
+        user = self.get_object(pk)
 
         if user != request.user and not request.user.is_staff:
             return Response(
@@ -94,8 +94,8 @@ class CustomUserDetail(APIView):
         serializer = CustomUserSerializer(user)
         return Response(serializer.data)
     
-    def put(self, request, username):
-        user = self.get_object(username)
+    def put(self, request, pk):
+        user = self.get_object(pk)
 
         if user != request.user and not request.user.is_staff:
             return Response(
@@ -108,8 +108,8 @@ class CustomUserDetail(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, username):
-        user = self.get_object(username)
+    def delete(self, request, pk):
+        user = self.get_object(pk)
 
         if user != request.user and not request.user.is_staff:
             return Response(
