@@ -65,9 +65,9 @@ class Profile(models.Model):
 
 
 
-  
-
   class Experience(models.Model):
     bio = models.CharField(max_length=1800, null=False, blank=False)
     location = models.CharField(max_length=50,null=True, blank=True)
     picture_url = models.URLField(null=True, blank=True)
+
+ 
