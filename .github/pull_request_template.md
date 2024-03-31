@@ -16,4 +16,4 @@ E.g. Do you need a quick look or a thorough assessment?
 
 - [ ] I have performed a self-review of my code
 - [ ] I have recommended where to start and how to proceed with the review
-
+- [ ] I have done a git pull from DEV to ensure this PR is up to date

@@ -69,6 +69,8 @@ If so:
 
 `git push`
 
+## START REBASING - if needed (steps below)
+
 ## 8. Go to GitHub to create a Pull Request
 A PR initiates a code review before any commits are merged to the DEV branch.
 
@@ -103,6 +105,54 @@ Good practice is to now update your local DEV branch:
 `git pull origin DEV`
 
 ### Note: 
-While someone is reviewing, you can create a new feature branch to start working on another feature - as long as, when you need to address comments, you make sure to switch to the right feature branch to update the PR.
+- While someone is reviewing, you can create a new feature branch to start working on another feature - as long as, when you need to address comments, you make sure to switch to the right feature branch to update the PR.
+- If there is a queue of PRs in the repo you have pushed to, you will need to `git pull` from `DEV` as they are merged, to ensure your PR is up to date with `DEV` when it is your turn to merge. This will hopefully prevent lost code. 
+
 
 # Pushing to MAIN will only occur periodically once we know for sure that everything is working on the DEV branch.
+
+## Rebasing
+
+## 1. Ensure Your Local Repository is Up-to-Date:
+Before starting the rebase process, ensure your local repository is up-to-date with the remote repository to avoid conflicts.
+
+`git fetch origin`
+
+`git pull origin DEV`
+
+## 2. Checkout the Branch You Want to Rebase:
+
+Switch to the feature branch that you want to rebase onto `DEV`.
+
+`git checkout <your_branch_name>`
+
+## 3. Start the Rebase Process:
+Rebase your current branch onto the branch you want to rebase onto. For example, if you want to rebase onto the DEV branch:
+
+`git rebase DEV`
+
+## 4. Resolve Conflicts (if any):
+If there are any conflicts during the rebase process, Git will pause and ask you to resolve them manually. Open the conflicted files, resolve the conflicts, and then add the resolved files to the staging area.
+
+`git add <resolved_file>`
+
+## 5. Continue Rebase:
+After resolving conflicts, continue the rebase process.
+
+`git rebase --continue`
+
+## 6. Push the Rebased Changes:
+Once the rebase process is complete and there are no conflicts, push the rebased changes to the remote repository.
+
+`git push origin <your_branch_name> --force`
+
+## 7. Notify Team Members:
+Inform team members about the rebased branch, especially if they have existing branches or changes based on the old branch.
+
+## 8. Create PR
+
+### Warning: Potential Pitfalls of Rebasing compared to Merging:
+- Rebasing rewrites the commit history, which can make it harder to track changes over time, especially for main and DEV
+- Rebasing can introduce conflicts that need to be resolved manually, potentially causing delays and increasing complexity.
+- Force-pushing after a rebase can overwrite changes on the remote repository, leading to data loss if not done carefully.
+- Rebasing can make it difficult to understand the chronological order of changes, leading to confusion among team members.
