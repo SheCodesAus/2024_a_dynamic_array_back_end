@@ -184,23 +184,38 @@ class ExperienceList(APIView):
 
     
 
-    def post (self,request, profile_id):
+    def post(self, request, profile_id):
         serializer = ExperienceSerializer(data=request.data)
-    # Retrieve the Profile instance
-        profile_instance = Profile.objects.get(id=profile_id)
+        
+        try:
+            profile = Profile.objects.get(id=profile_id)
+            self.check_object_permissions(self.request, profile)
+            
+            if serializer.is_valid():
+                serializer.save(profile=profile)  # Use 'profile' instead of 'profile_instance'
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        except Profile.DoesNotExist:
+            raise Http404
+        
+        # profile_instance = Profile.objects.get(id=profile_id)
 
-        print(profile_instance.id)
-        if serializer.is_valid():
+        # if not profile_instance:
+        #      return Response(
+        #          {"detail": "Profile doesn't exist."}, status=status.HTTP_403_FORBIDDEN)
+        # if serializer.is_valid():
            
            
-            serializer.save(profile=profile_instance)
-            return Response(
-                serializer.data, status=status.HTTP_201_CREATED
-            )
-        return Response(
-            serializer.errors,
-            status=status.HTTP_400_BAD_REQUEST
-        )
+        #     serializer.save(profile=profile_instance)
+        #     return Response(
+        #         serializer.data, status=status.HTTP_201_CREATED
+        #     )
+        # return Response(
+        #     serializer.errors,
+        #     status=status.HTTP_400_BAD_REQUEST
+        # )
     
 class ExperienceDetail(APIView): 
 
