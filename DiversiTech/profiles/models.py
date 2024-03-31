@@ -64,7 +64,6 @@ class Profile(models.Model):
   industries = models.ManyToManyField(Industry, related_name='industry_profiles', blank=True)
   tags = models.ManyToManyField(Tag, related_name='tagged_profiles', blank=True)
 
-
 class Experience(models.Model):
    
     experience_type_choices = (
@@ -82,4 +81,3 @@ class Experience(models.Model):
     is_present_experience = models.BooleanField(null=False, blank=False, default=False)
     start_date = models.DateField(blank=False, null=False)
     end_date = models.DateField(blank=True, null=True)
-    
