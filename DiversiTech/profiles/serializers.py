@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Profile, Industry, Tag
+from .models import Profile, Industry, Tag, Experience
 from .validators import validate_industries, validate_unique_tag, validate_unique_industry
 
 class TagSerializer(serializers.ModelSerializer):
@@ -74,3 +74,8 @@ class ProfileDetailSerializer (ProfileSerializer):
     
         instance.save()
         return instance
+    
+    class ExperiencesSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Experience
+            fields = '__all__'

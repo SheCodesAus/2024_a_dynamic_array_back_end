@@ -57,9 +57,9 @@ INSTALLED_APPS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
-        'DATE_INPUT_FORMATS':["%d-%m-%Y"], ["%M-%Y"],
-    ]
+        'rest_framework.authentication.TokenAuthentication'
+    ],
+       'DATE_INPUT_FORMATS':["%d-%m-%Y", "%M-%Y"]
 }
 
 AUTH_USER_MODEL = 'users.CustomUser'
@@ -132,7 +132,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'AWST'
+TIME_ZONE = 'UCT'
 
 USE_I18N = True
 

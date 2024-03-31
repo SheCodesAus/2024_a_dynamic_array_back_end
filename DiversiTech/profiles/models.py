@@ -74,10 +74,24 @@ class Experience(models.Model):
         ("Job", "Job")
     )
 
-    experience_type = models.CharField( choices=experience_type_choices, default="Job") 
+    experience_type = models.CharField(max_length=50, choices=experience_type_choices, default="Job") 
     description = models.CharField(max_length=1000, null=False, blank=False)
     url = models.URLField(null=True, blank=True)
     picture_url = models.URLField(null=True, blank=True)
     is_present_experience = models.BooleanField(null=False, blank=False, default=False)
     start_date = models.DateField(blank=False, null=False)
     end_date = models.DateField(blank=True, null=True)
+
+    def start_date_formatted(self):
+        return self.start_date.strftime("%b %Y")
+
+    def end_date_formatted(self):
+        if self.end_date:
+            return self.end_date.strftime("%b %Y")
+        return "Present"
+
+    def __str__(self):
+        return f"{self.description} - {self.start_date_formatted()} to {self.end_date_formatted()}"
+    
+    class Meta:
+        verbose_name_plural = 'Experiences'
