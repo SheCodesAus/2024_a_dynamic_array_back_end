@@ -73,7 +73,11 @@ class Experience(models.Model):
         ("Mentoring", "Mentoring"),
         ("Job", "Job")
     )
-
+    profile = models.ForeignKey(
+      'Profile',
+      on_delete=models.CASCADE,
+      related_name='profile_experiences')
+    
     experience_type = models.CharField(max_length=50, choices=experience_type_choices, default="Job") 
     description = models.CharField(max_length=1000, null=False, blank=False)
     url = models.URLField(null=True, blank=True)

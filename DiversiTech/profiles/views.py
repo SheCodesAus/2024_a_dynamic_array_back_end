@@ -1,7 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Profile, Industry, Tag
-from .serializers import ProfileSerializer, ProfileDetailSerializer, IndustrySerializer, TagSerializer
+from .models import Profile, Industry, Tag, Experience
+from .serializers import (ProfileSerializer, ProfileDetailSerializer,
+     IndustrySerializer, TagSerializer, ExperienceSerializer, ExperienceDetailSerializer)
 from django.http import Http404
 from rest_framework import status, permissions
 from .permissions import IsOwnerOrAdminOrReadOnly
@@ -167,4 +168,69 @@ class ProfileDetail(APIView):
         profile = self.get_object(pk)
         profile.delete()
         return Response({"detail":"Profile deleted successfully"}, status=status.HTTP_200_OK)
-          
+
+
+
+class ExperienceList(APIView):
+    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+        
+    def get(self, request, profile_id=None):
+        if profile_id:
+            experiences = Experience.objects.all().filter(profile=profile_id)
+        else:
+            experiences = Experience.objects.all()
+        serializer = ExperienceSerializer(experiences, many=True)
+        return Response(serializer.data)
+
+    
+
+    def post (self,request, profile_id):
+        serializer = ExperienceSerializer(data=request.data)
+            
+        if serializer.is_valid():
+            serializer.save(profile=profile_id)
+            return Response(
+                serializer.data, status=status.HTTP_201_CREATED
+            )
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+class ExperienceDetail(APIView): 
+# will need to add the endpoint in URLs.py
+    # permission_classes = [
+    #     permissions.IsAuthenticatedOrReadOnly,
+    #     IsSupporterOrReadOnly
+    # ]
+
+# getting the object from the database
+    def get_object(self, pk):
+        try:
+            experience=Experience.objects.get(pk=pk)
+            self.check_object_permissions(self.request, experience)
+            return experience
+        except Experience.DoesNotExist:
+            raise Http404
+        
+# passing the object to the serializer and returning serialized data
+    def get(self, request, pk):
+        experience = self.get_object(pk)
+        serializer = ExperienceDetailSerializer(experience)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def put (self, request, pk):
+        experience = self.get_object(pk)
+        serializer = ExperienceDetailSerializer(
+             instance=experience,
+             data=request.data,
+             partial=True
+        )
+        if serializer.is_valid():
+             serializer.save()
+             return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        return Response(
+             serializer.errors,
+             status=status.HTTP_400_BAD_REQUEST
+        )    
