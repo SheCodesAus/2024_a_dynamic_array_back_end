@@ -47,6 +47,7 @@ class CustomAuthToken(ObtainAuthToken):
         return Response ({
             'token': token.key,
             'user_id': user.pk,
+            'is_staff': user.is_staff,
         })
 
 
