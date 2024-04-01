@@ -103,6 +103,8 @@ Good practice is to now update your local DEV branch:
 `git pull origin DEV`
 
 ### Note: 
-While someone is reviewing, you can create a new feature branch to start working on another feature - as long as, when you need to address comments, you make sure to switch to the right feature branch to update the PR.
+- While someone is reviewing, you can create a new feature branch to start working on another feature - as long as, when you need to address comments, you make sure to switch to the right feature branch to update the PR.
+- If there is a queue of PRs in the repo you have pushed to, you will need to `git pull` from `DEV` as they are merged, to ensure your PR is up to date with `DEV` when it is your turn to merge. This will hopefully prevent lost code. 
+
 
 # Pushing to MAIN will only occur periodically once we know for sure that everything is working on the DEV branch.

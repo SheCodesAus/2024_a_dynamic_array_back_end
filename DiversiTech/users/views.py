@@ -76,30 +76,30 @@ class CustomUserList(APIView):
       
     
 class CustomUserDetail(APIView):
-    def get_object(self, username):
+    def get_object(self, pk):
         try:
-            return CustomUser.objects.get(username=username)
+            return CustomUser.objects.get(pk=pk)
         except CustomUser.DoesNotExist:
             raise Http404
     
-    def get(self, request, username):
-        user = self.get_object(username)
+    def get(self, request, pk):
+        user = self.get_object(pk)
 
         if user != request.user and not request.user.is_staff:
             return Response(
-                {"message": "You are not authorized to view this record"},
+                {"detail": "You are not authorized to view this record"},
                 status=status.HTTP_403_FORBIDDEN
             )
 
         serializer = CustomUserSerializer(user)
         return Response(serializer.data)
     
-    def put(self, request, username):
-        user = self.get_object(username)
+    def put(self, request, pk):
+        user = self.get_object(pk)
 
         if user != request.user and not request.user.is_staff:
             return Response(
-                {"message": "You are not authorized to edit this record"},
+                {"detail": "You are not authorized to edit this record"},
                 status=status.HTTP_403_FORBIDDEN
             )
         serializer = CustomUserEditSerializer(user, data=request.data, partial=True)
@@ -108,13 +108,13 @@ class CustomUserDetail(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, username):
-        user = self.get_object(username)
+    def delete(self, request, pk):
+        user = self.get_object(pk)
 
         if user != request.user and not request.user.is_staff:
             return Response(
-                {"message": "You are not authorized to delete this record"},
+                {"detail": "You are not authorized to delete this record"},
                 status=status.HTTP_403_FORBIDDEN
             )
         user.delete()
-        return Response({"message: User successfully deleted"}, status=status.HTTP_200_OK)
+        return Response({"detail": "User successfully deleted"}, status=status.HTTP_200_OK)

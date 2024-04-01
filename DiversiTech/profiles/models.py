@@ -63,4 +63,4 @@ class Profile(models.Model):
   industries = models.ManyToManyField(Industry, related_name='industry_profiles', blank=True)
   tags = models.ManyToManyField(Tag, related_name='tagged_profiles', blank=True)
 
-
+ 
