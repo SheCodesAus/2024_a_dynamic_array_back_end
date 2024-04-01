@@ -59,7 +59,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication'
     ],
-       'DATE_INPUT_FORMATS':["%d-%m-%Y", "%M/%Y"]
+       'DATE_INPUT_FORMATS':["%d-%m-%Y", "%m/%Y"]
 }
 
 AUTH_USER_MODEL = 'users.CustomUser'
@@ -132,7 +132,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UCT'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 

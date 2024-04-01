@@ -1,4 +1,5 @@
 from rest_framework import serializers
+import datetime
 from .models import Profile, Industry, Tag, Experience
 from .validators import validate_industries, validate_unique_tag, validate_unique_industry
 
@@ -39,11 +40,16 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = '__all__'
 
+
+
 class ExperienceSerializer(serializers.ModelSerializer):
     profile = serializers.ReadOnlyField(source='profile.id')
+
     class Meta:
         model = Experience
         fields = '__all__'
+
+   
 
 
 class ProfileDetailSerializer (ProfileSerializer):
