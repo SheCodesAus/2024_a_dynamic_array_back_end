@@ -81,12 +81,6 @@ class CustomUserDetail(APIView):
     def get(self, request, pk):
         user = self.get_object(pk)
 
-        if user != request.user and not request.user.is_staff:
-            return Response(
-                {"detail": "You are not authorized to view this record"},
-                status=status.HTTP_403_FORBIDDEN
-            )
-
         serializer = CustomUserSerializer(user)
         return Response(serializer.data)
     
