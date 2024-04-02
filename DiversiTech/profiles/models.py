@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+# from django.contrib.postgres.fields import DateRangeField
 
 
 class Tag(models.Model):
@@ -63,4 +64,38 @@ class Profile(models.Model):
   industries = models.ManyToManyField(Industry, related_name='industry_profiles', blank=True)
   tags = models.ManyToManyField(Tag, related_name='tagged_profiles', blank=True)
 
- 
+class Experience(models.Model):
+   
+    experience_type_choices = (
+        ("Volunteering", "Volunteering"),
+        ("Project", "Project"),
+        ("Talk", "Talk"),
+        ("Mentoring", "Mentoring"),
+        ("Job", "Job")
+    )
+    profile = models.ForeignKey(
+      'Profile',
+      on_delete=models.CASCADE,
+      related_name='profile_experiences')
+    
+    experience_type = models.CharField(max_length=50, choices=experience_type_choices, default="Job") 
+    description = models.CharField(max_length=1000, null=False, blank=False)
+    url = models.URLField(null=True, blank=True)
+    picture_url = models.URLField(null=True, blank=True)
+    is_present_experience = models.BooleanField(null=False, blank=False, default=False)
+    start_date = models.DateField(blank=False, null=False)
+    end_date = models.DateField(blank=True, null=True)
+
+    def start_date_formatted(self):
+        return self.start_date.strftime("%b %Y")
+
+    def end_date_formatted(self):
+        if self.end_date:
+            return self.end_date.strftime("%b %Y")
+        return "Present"
+
+    def __str__(self):
+        return f"{self.description} - {self.start_date_formatted()} to {self.end_date_formatted()}"
+    
+    class Meta:
+        verbose_name_plural = 'Experiences'
