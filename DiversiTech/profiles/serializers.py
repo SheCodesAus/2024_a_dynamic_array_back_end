@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Profile, Industry, Tag
+import datetime
+from .models import Profile, Industry, Tag, Experience
 from .validators import validate_industries, validate_unique_tag, validate_unique_industry
 
 class TagSerializer(serializers.ModelSerializer):
@@ -40,8 +41,19 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ProfileDetailSerializer (ProfileSerializer):
 
+class ExperienceSerializer(serializers.ModelSerializer):
+    profile = serializers.ReadOnlyField(source='profile.id')
+
+    class Meta:
+        model = Experience
+        fields = '__all__'
+
+   
+
+
+class ProfileDetailSerializer (ProfileSerializer):
+    profile_experiences = ExperienceSerializer(many=True, read_only=True)
 
     def update(self, instance, validated_data):
         
@@ -74,3 +86,16 @@ class ProfileDetailSerializer (ProfileSerializer):
     
         instance.save()
         return instance
+    
+class ExperienceDetailSerializer(ExperienceSerializer):
+
+    def update(self, instance, validated_data):
+        instance.experience_type = validated_data.get('experience_type', instance.experience_type)
+        instance.description = validated_data.get('description', instance.description)
+        instance.url = validated_data.get('url', instance.url)
+        instance.picture_url = validated_data.get('picture_url',instance.picture_url)
+        instance.is_present_experience = validated_data.get('is_present_experience', instance.is_present_experience)
+        instance.start_date = validated_data.get('start_date', instance.start_date)
+        instance.end_date = validated_data.get('end_date', instance.end_date)
+        instance.save()
+        return instance        
