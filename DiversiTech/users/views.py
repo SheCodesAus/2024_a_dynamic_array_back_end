@@ -47,17 +47,13 @@ class CustomAuthToken(ObtainAuthToken):
         return Response ({
             'token': token.key,
             'user_id': user.pk,
+            'is_staff': user.is_staff,
         })
 
 
 class CustomUserList(APIView):
 
     def get(self, request):
-        # if not request.user.is_staff:
-        #     return Response(
-        #         {"message": "You do not have permission to view these records"},
-        #         status=status.HTTP_403_FORBIDDEN
-        #     )
         users = CustomUser.objects.all()
         serializer = CustomUserSerializer(users, many=True)
         return Response(serializer.data)
@@ -84,12 +80,6 @@ class CustomUserDetail(APIView):
     
     def get(self, request, pk):
         user = self.get_object(pk)
-
-        if user != request.user and not request.user.is_staff:
-            return Response(
-                {"detail": "You are not authorized to view this record"},
-                status=status.HTTP_403_FORBIDDEN
-            )
 
         serializer = CustomUserSerializer(user)
         return Response(serializer.data)
