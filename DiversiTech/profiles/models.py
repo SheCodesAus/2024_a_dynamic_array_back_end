@@ -34,6 +34,9 @@ class Profile(models.Model):
       return self.owner.get_username()
 
   bio = models.CharField(max_length=1800, null=False, blank=False)
+  area = models.CharField(max_length=50, null=True, blank=True)
+  state = models.CharField(max_length=50, null=True, blank=True)
+  country = models.CharField(max_length=50, null=False, blank=True)
   location = models.CharField(max_length=50,null=True, blank=True)
   picture_url = models.URLField(null=True, blank=True)
   is_hidden = models.BooleanField(null=True, blank=True)

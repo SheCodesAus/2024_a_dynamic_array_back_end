@@ -70,6 +70,9 @@ class ProfileDetailSerializer (ProfileSerializer):
             instance.tags.add(tag)
         
         instance.bio = validated_data.get('bio', instance.bio)
+        instance.area = validated_data.get('area', instance.area)
+        instance.state = validated_data.get('state', instance.state)
+        instance.country = validated_data.get('country', instance.country)
         instance.location = validated_data.get('location', instance.location)
         instance.picture_url = validated_data.get('picture_url', instance.picture_url)
         instance.is_hidden = validated_data.get('is_hidden', instance.is_hidden)
