@@ -58,8 +58,7 @@ INSTALLED_APPS = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication'
-    ],
-       'DATE_INPUT_FORMATS':["%d-%m-%Y", "%m/%Y"]
+    ]
 }
 
 AUTH_USER_MODEL = 'users.CustomUser'
