@@ -192,7 +192,7 @@ class ExperienceList(APIView):
             self.check_object_permissions(self.request, profile)
             
             if serializer.is_valid():
-                serializer.save(profile=profile)  # Use 'profile' instead of 'profile_instance'
+                serializer.save(profile=profile) 
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
