@@ -34,8 +34,11 @@ class Profile(models.Model):
       return self.owner.get_username()
 
   bio = models.CharField(max_length=1800, null=False, blank=False)
+  area = models.CharField(max_length=50, null=True, blank=True)
+  state = models.CharField(max_length=50, null=True, blank=True)
+  country = models.CharField(max_length=50, null=False, blank=True)
   location = models.CharField(max_length=50,null=True, blank=True)
-  picture_url = models.URLField(null=True, blank=True)
+  picture_url = models.URLField(max_length=500, null=True, blank=True)
   is_hidden = models.BooleanField(null=True, blank=True)
   number_of_endorsements = models.IntegerField(null=True, blank=True)
   email_url = models.EmailField(null=True, blank=True)
@@ -80,19 +83,23 @@ class Experience(models.Model):
     
     experience_type = models.CharField(max_length=50, choices=experience_type_choices, default="Job") 
     description = models.CharField(max_length=1000, null=False, blank=False)
-    url = models.URLField(null=True, blank=True)
-    picture_url = models.URLField(null=True, blank=True)
+    experience_url = models.URLField(max_length=500,null=True, blank=True)
+    picture_url = models.URLField(max_length=500, null=True, blank=True)
     is_present_experience = models.BooleanField(null=False, blank=False, default=False)
     start_date = models.DateField(blank=False, null=False)
     end_date = models.DateField(blank=True, null=True)
 
+    @property
     def start_date_formatted(self):
         return self.start_date.strftime("%b %Y")
-
+       
+    @property
     def end_date_formatted(self):
-        if self.end_date:
-            return self.end_date.strftime("%b %Y")
-        return "Present"
+        if self.end_date & self.is_present_experience == False:
+            return "- " + self.end_date.strftime("%b %Y")
+        elif self.is_present_experience == True:
+            return "- Present"
+        else: ""
 
     def __str__(self):
         return f"{self.description} - {self.start_date_formatted()} to {self.end_date_formatted()}"
